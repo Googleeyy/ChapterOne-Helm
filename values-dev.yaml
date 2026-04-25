@@ -111,7 +111,7 @@ frontend:
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: dev-03630b1
+    tag: dev-9f38204
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80
