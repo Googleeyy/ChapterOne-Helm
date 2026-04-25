@@ -36,4 +36,4 @@ userService:
     enabled: false
 user-service:
   image:
-    tag: dev-ced5696
+    tag: dev-d43c647
