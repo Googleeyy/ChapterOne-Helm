@@ -61,10 +61,7 @@ bookService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 8
-    targetCPUUtilizationPercentage: 70
+    enabled: false
 
 userService:
   name: user-service
@@ -87,10 +84,7 @@ userService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 8
-    targetCPUUtilizationPercentage: 70
+    enabled: false
 
 borrowService:
   name: borrow-service
@@ -113,10 +107,7 @@ borrowService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 8
-    targetCPUUtilizationPercentage: 70
+    enabled: false
 
 frontend:
   name: frontend
