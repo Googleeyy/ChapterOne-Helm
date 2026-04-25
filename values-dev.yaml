@@ -8,9 +8,7 @@ global:
   imagePullSecrets: []
   imagePullPolicy: IfNotPresent
   environment: dev
-
 createNamespace: true
-
 gateway:
   name: library-gateway
   namespace: library-dev
@@ -23,7 +21,6 @@ gateway:
   tls:
     enabled: false
     secretName: ""
-
 mongodb:
   name: mongodb
   secretName: mongodb-secret
@@ -43,7 +40,6 @@ mongodb:
     limits:
       cpu: "250m"
       memory: "512Mi"
-
 bookService:
   name: book-service
   secretName: book-service-secret
@@ -66,7 +62,6 @@ bookService:
       memory: "256Mi"
   autoscaling:
     enabled: false
-
 userService:
   name: user-service
   secretName: user-service-secret
@@ -89,7 +84,6 @@ userService:
       memory: "256Mi"
   autoscaling:
     enabled: false
-
 borrowService:
   name: borrow-service
   secretName: borrow-service-secret
@@ -112,13 +106,12 @@ borrowService:
       memory: "256Mi"
   autoscaling:
     enabled: false
-
 frontend:
   name: frontend
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: dev
+    tag: dev-03630b1
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80
@@ -132,7 +125,6 @@ frontend:
       memory: "64Mi"
   autoscaling:
     enabled: false
-
 haproxy:
   enabled: false
   replicaCount: 1
@@ -143,21 +135,19 @@ haproxy:
     limits:
       cpu: "100m"
       memory: "128Mi"
-
 networkPolicy:
   enabled: false
-
 secrets:
   - name: mongodb-secret
     data:
-      # No authentication - using simple URI
+    # No authentication - using simple URI
   - name: book-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+    # No MongoDB credentials needed - using simple URI
   - name: user-service-secret
     data:
       # No MongoDB credentials needed - using simple URI
       JWT_SECRET: "dev-jwt-secret-not-for-production"
   - name: borrow-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+# No MongoDB credentials needed - using simple URI
