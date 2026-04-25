@@ -31,6 +31,3 @@ bookService:
       memory: "512Mi"
   autoscaling:
     enabled: false
-book-service:
-  image:
-    tag: dev-3c252f8
