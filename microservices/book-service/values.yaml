@@ -5,12 +5,10 @@ global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
-
 mongodb:
   name: mongo
   primaryHost: mongo
   port: 27017
-
 bookService:
   name: book-service
   secretName: book-service-secret
@@ -33,3 +31,6 @@ bookService:
       memory: "512Mi"
   autoscaling:
     enabled: false
+book-service:
+  image:
+    tag: dev-3c252f8
