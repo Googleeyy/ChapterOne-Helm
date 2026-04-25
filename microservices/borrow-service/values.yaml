@@ -37,6 +37,4 @@ borrowService:
       memory: "512Mi"
   autoscaling:
     enabled: false
-borrow-service:
-  image:
-    tag: dev-c84cf3a
+
