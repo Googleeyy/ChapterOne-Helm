@@ -16,7 +16,7 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/book-service
-    tag: latest
+    tag: dev-3c252f8
     pullPolicy: IfNotPresent
   replicas: 2
   port: 8081
