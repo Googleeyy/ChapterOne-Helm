@@ -5,16 +5,13 @@ global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
-
 mongodb:
   name: mongo
   primaryHost: mongo
   port: 27017
-
 borrowService:
   name: borrow-service
   port: 8083
-
 userService:
   name: user-service
   secretName: user-service-secret
@@ -37,3 +34,4 @@ userService:
       memory: "512Mi"
   autoscaling:
     enabled: false
+
