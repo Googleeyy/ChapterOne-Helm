@@ -1,0 +1,9 @@
+{{- if .Values.createNamespace }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.global.namespace }}
+  labels:
+    name: {{ .Values.global.namespace }}
+    environment: {{ .Values.global.environment | default "default" }}
+{{- end }}
