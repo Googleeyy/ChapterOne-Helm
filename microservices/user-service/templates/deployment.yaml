@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.userService.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.userService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.userService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.userService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.userService.name }}
+          image: "{{ .Values.userService.image.repository }}:{{ .Values.userService.image.tag }}"
+          imagePullPolicy: {{ .Values.userService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.userService.port }}
+          env:
+            - name: MONGO_URI
+              value: mongodb://mongo:27017/chapterone_users
+            - name: JWT_SECRET
+              value: chapterone-super-secret-jwt-key-change-in-production-256bits
+            - name: BORROW_SERVICE_URL
+              value: http://borrow-service:8083
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.userService.port }}
+            initialDelaySeconds: 40
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.userService.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

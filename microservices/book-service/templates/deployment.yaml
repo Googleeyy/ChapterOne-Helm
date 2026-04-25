@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.bookService.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.bookService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.bookService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.bookService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.bookService.name }}
+          image: "{{ .Values.bookService.image.repository }}:{{ .Values.bookService.image.tag }}"
+          imagePullPolicy: {{ .Values.bookService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.bookService.port }}
+          env:
+            - name: MONGO_URI
+              value: mongodb://mongo:27017/chapterone_books
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.bookService.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.bookService.port }}
+            initialDelaySeconds: 90
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

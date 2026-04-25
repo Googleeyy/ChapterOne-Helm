@@ -1,0 +1,18 @@
+{{- if .Values.networkPolicy.enabled }}
+# Default deny-all policy for the namespace
+# Applied first to ensure default-deny, then specific policies allow traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "library-e2e.labels" . | nindent 4 }}
+    app.kubernetes.io/component: networkpolicy
+    policy-type: default-deny
+spec:
+  podSelector: {}  # Selects all pods in namespace
+  policyTypes:
+    - Ingress
+    - Egress
+{{- end }}

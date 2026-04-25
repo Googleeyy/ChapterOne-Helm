@@ -1,0 +1,87 @@
+global:
+  environment: prod
+
+frontend:
+  replicaCount: 3
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 70
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  env:
+    BACKEND_API_URL: "http://frontend-svc.prod.svc.cluster.local:80"
+
+bookService:
+  replicaCount: 3
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 10
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+userService:
+  replicaCount: 3
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 10
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+borrowService:
+  replicaCount: 3
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 10
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+mongodb:
+  replicaCount: 1
+  persistence:
+    size: 20Gi
+    storageClass: "gp2"
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+
+gateway:
+  host: "library.example.com"
+  tls:
+    enabled: true
+    secretName: "library-tls-secret"
+
+haproxy:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"

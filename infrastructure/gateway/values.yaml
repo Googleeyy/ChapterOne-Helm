@@ -1,0 +1,41 @@
+# Gateway Subchart Values
+# These values are overridden by the parent chart's values.yaml
+
+global:
+  appName: library-e2e
+  namespace: chapterone
+
+haproxy:
+  enabled: false
+
+gateway:
+  enabled: true
+  name: library-gateway
+  gatewayClassName: kgateway
+  listener:
+    name: http
+    port: 80
+  host: "library.local"
+  tls:
+    enabled: false
+    secretName: ""
+
+frontend:
+  name: frontend
+  routePrefix: /
+  port: 80
+
+bookService:
+  name: book-service
+  routePrefix: /api/books
+  port: 8081
+
+userService:
+  name: user-service
+  routePrefix: /api/users
+  port: 8082
+
+borrowService:
+  name: borrow-service
+  routePrefix: /api/borrows
+  port: 8083

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.userService.name }}-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.userService.name }}
+data:
+  APP_NAME: "User Service"
+  HOST: "0.0.0.0"
+  PORT: "{{ .Values.userService.port }}"
+  MONGO_URI: "mongodb://{{ .Values.mongodb.primaryHost }}:{{ .Values.mongodb.port }}/{{ .Values.userService.database.name }}"
+  BORROW_SERVICE_URL: "http://borrow-service.{{ .Values.global.namespace }}.svc.cluster.local:{{ .Values.borrowService.port }}"

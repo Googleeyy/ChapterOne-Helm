@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.bookService.name }}-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.bookService.name }}
+data:
+  APP_NAME: "Book Service"
+  HOST: "0.0.0.0"
+  PORT: "{{ .Values.bookService.port }}"
+  MONGO_URI: "mongodb://{{ .Values.mongodb.primaryHost }}:{{ .Values.mongodb.port }}/{{ .Values.bookService.database.name }}"

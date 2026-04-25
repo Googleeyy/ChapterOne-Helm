@@ -1,0 +1,58 @@
+{{- if .Values.haproxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: haproxy
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/part-of: {{ .Values.global.appName }}
+spec:
+  replicas: {{ .Values.haproxy.replicaCount }}
+  selector:
+    matchLabels:
+      app: haproxy
+  template:
+    metadata:
+      labels:
+        app: haproxy
+        app.kubernetes.io/component: gateway
+    spec:
+      containers:
+        - name: haproxy
+          image: haproxy:2.8-alpine
+          ports:
+            - containerPort: 80
+              protocol: TCP
+            - containerPort: 443
+              protocol: TCP
+          resources:
+            requests:
+              cpu: {{ .Values.haproxy.resources.requests.cpu }}
+              memory: {{ .Values.haproxy.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.haproxy.resources.limits.cpu }}
+              memory: {{ .Values.haproxy.resources.limits.memory }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: haproxy
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: haproxy
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+      name: https
+  selector:
+    app: haproxy
+{{- end }}

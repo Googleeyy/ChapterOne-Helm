@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "library-e2e.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+    app: mongodb
+spec:
+  serviceName: mongodb-headless
+  replicas: {{ .Values.mongodb.replicaCount }}
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - name: mongodb
+              containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command: {{ .Values.mongodb.probes.readiness.command | toJson }}
+            initialDelaySeconds: {{ .Values.mongodb.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mongodb.probes.readiness.periodSeconds }}
+          livenessProbe:
+            exec:
+              command: {{ .Values.mongodb.probes.liveness.command | toJson }}
+            initialDelaySeconds: {{ .Values.mongodb.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.mongodb.probes.liveness.periodSeconds }}
+          resources:
+            {{- toYaml .Values.mongodb.resources | nindent 12 }}
+      volumes:
+        - name: init-script
+          configMap:
+            name: {{ include "library-e2e.fullname" . }}-mongo-init
+  {{- if .Values.mongodb.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-data
+      spec:
+        accessModes:
+          - {{ .Values.mongodb.persistence.accessMode }}
+        {{- if .Values.mongodb.persistence.storageClass }}
+        storageClassName: {{ .Values.mongodb.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+  {{- end }}

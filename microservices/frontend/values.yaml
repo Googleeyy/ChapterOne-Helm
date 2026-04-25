@@ -1,0 +1,31 @@
+# Frontend Subchart Values
+# These values are overridden by the parent chart's values.yaml
+
+global:
+  appName: library-e2e
+  namespace: chapterone
+  imagePullPolicy: IfNotPresent
+
+frontend:
+  name: frontend
+  routePrefix: /
+  image:
+    repository: googleyy/chapterone-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
+  apiBaseUrl: ""
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 70

@@ -1,0 +1,172 @@
+# Global values for the Library E2E platform deployment repo.
+# Update image repositories/tags here and manage secret data in secrets/*.yaml.
+
+global:
+  appName: library-e2e
+  namespace: chapterone
+  imagePullSecrets: []
+  imagePullPolicy: IfNotPresent
+
+gateway:
+  name: library-gateway
+  namespace: chapterone
+  gatewayClassName: kgateway
+  listener:
+    name: http
+    port: 80
+  enabled: true
+  host: "library.local"
+  tls:
+    enabled: false
+    secretName: ""
+
+mongodb:
+  name: mongodb
+  secretName: mongodb-secret
+  primaryHost: mongodb-0.mongodb
+  image:
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+  port: 27017
+  storage:
+    size: "2Gi"
+    storageClass: "nfs-client"
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+bookService:
+  name: book-service
+  secretName: book-service-secret
+  routePrefix: /api/books
+  healthPath: /api/books
+  image:
+    repository: googleyy/book-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8081
+  database:
+    name: chapterone_books
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+
+userService:
+  name: user-service
+  secretName: user-service-secret
+  routePrefix: /api/users
+  healthPath: /actuator/health
+  image:
+    repository: googleyy/user-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8082
+  database:
+    name: chapterone_users
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+
+borrowService:
+  name: borrow-service
+  secretName: borrow-service-secret
+  routePrefix: /api/borrows
+  healthPath: /api-docs
+  image:
+    repository: googleyy/borrow-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8083
+  database:
+    name: chapterone_borrows
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+
+frontend:
+  name: frontend
+  routePrefix: /
+  image:
+    repository: googleyy/chapterone-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
+  apiBaseUrl: ""
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 70
+
+haproxy:
+  enabled: true
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+networkPolicy:
+  enabled: true
+
+secrets:
+  - name: mongodb-secret
+    data:
+      # No authentication - using simple URI
+  - name: book-service-secret
+    data:
+      # No MongoDB credentials needed - using simple URI
+  - name: user-service-secret
+    data:
+      # No MongoDB credentials needed - using simple URI
+      JWT_SECRET: "change-me-in-production-jwt-secret"
+  - name: borrow-service-secret
+    data:
+      # No MongoDB credentials needed - using simple URI

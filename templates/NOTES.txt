@@ -1,0 +1,48 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+NAMESPACE: {{ .Values.global.namespace }}
+
+Services:
+  MongoDB: mongodb.{{ .Values.global.namespace }}.svc.cluster.local:27017
+  Book Service: book-service.{{ .Values.global.namespace }}.svc.cluster.local:8081
+  User Service: user-service.{{ .Values.global.namespace }}.svc.cluster.local:8082
+  Borrow Service: borrow-service.{{ .Values.global.namespace }}.svc.cluster.local:8083
+  Frontend: frontend.{{ .Values.global.namespace }}.svc.cluster.local:80
+
+{{- if .Values.gateway.enabled }}
+Gateway:
+  Name: {{ .Values.gateway.name }}
+  Class: {{ .Values.gateway.gatewayClassName }}
+  Host: {{ .Values.gateway.host }}
+{{- end }}
+
+To check the status of your pods:
+
+  $ kubectl get pods -n {{ .Values.global.namespace }}
+
+To check the status of your services:
+
+  $ kubectl get svc -n {{ .Values.global.namespace }}
+
+To view logs:
+
+  $ kubectl logs -n {{ .Values.global.namespace }} -l app=mongodb
+  $ kubectl logs -n {{ .Values.global.namespace }} -l app=book-service
+  $ kubectl logs -n {{ .Values.global.namespace }} -l app=user-service
+  $ kubectl logs -n {{ .Values.global.namespace }} -l app=borrow-service
+  $ kubectl logs -n {{ .Values.global.namespace }} -l app=frontend
+
+To access the application, port-forward to the frontend:
+
+  $ kubectl port-forward -n {{ .Values.global.namespace }} svc/frontend 3000:80
+
+Then open http://localhost:3000 in your browser.
+
+IMPORTANT: Replace placeholder secrets in values.yaml before production deployment!

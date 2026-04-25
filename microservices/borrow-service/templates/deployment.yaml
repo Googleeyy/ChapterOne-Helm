@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.borrowService.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: {{ .Values.borrowService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.borrowService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.borrowService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.borrowService.name }}
+          image: "{{ .Values.borrowService.image.repository }}:{{ .Values.borrowService.image.tag }}"
+          imagePullPolicy: {{ .Values.borrowService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.borrowService.port }}
+          env:
+            - name: MONGO_URI
+              value: mongodb://mongo:27017/chapterone_borrows
+            - name: BOOK_SERVICE_URL
+              value: http://book-service:8081
+            - name: USER_SERVICE_URL
+              value: http://user-service:8082
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.borrowService.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.borrowService.port }}
+            initialDelaySeconds: 90
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

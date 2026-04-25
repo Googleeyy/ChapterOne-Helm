@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.borrowService.name }}-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.borrowService.name }}
+data:
+  APP_NAME: "Borrow Service"
+  HOST: "0.0.0.0"
+  PORT: "{{ .Values.borrowService.port }}"
+  MONGO_URI: "mongodb://{{ .Values.mongodb.primaryHost }}:{{ .Values.mongodb.port }}/{{ .Values.borrowService.database.name }}"
+  BOOK_SERVICE_URL: "http://book-service.{{ .Values.global.namespace }}.svc.cluster.local:{{ .Values.bookService.port }}"
+  USER_SERVICE_URL: "http://user-service.{{ .Values.global.namespace }}.svc.cluster.local:{{ .Values.userService.port }}"

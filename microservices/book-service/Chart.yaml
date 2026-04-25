@@ -1,0 +1,5 @@
+apiVersion: v2
+name: book-service
+description: Book Service for Library E2E Management System
+version: 1.0.0
+appVersion: "1.0.0"

@@ -1,0 +1,32 @@
+apiVersion: v2
+name: library-e2e
+description: A Helm chart for Library E2E platform - complete microservices deployment
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: mongodb
+    condition: mongodb.enabled
+    repository: file://./infrastructure/mongodb
+    version: "1.0.0"
+  - name: gateway
+    condition: gateway.enabled
+    repository: file://./infrastructure/gateway
+    version: "1.0.0"
+  - name: book-service
+    condition: bookService.enabled
+    repository: file://./microservices/book-service
+    version: "1.0.0"
+  - name: user-service
+    condition: userService.enabled
+    repository: file://./microservices/user-service
+    version: "1.0.0"
+  - name: borrow-service
+    condition: borrowService.enabled
+    repository: file://./microservices/borrow-service
+    version: "1.0.0"
+  - name: frontend
+    condition: frontend.enabled
+    repository: file://./microservices/frontend
+    version: "1.0.0"

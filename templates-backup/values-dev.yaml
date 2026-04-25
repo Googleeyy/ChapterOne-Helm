@@ -1,0 +1,75 @@
+global:
+  environment: dev
+
+frontend:
+  replicaCount: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 4
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "25m"
+    limits:
+      memory: "64Mi"
+      cpu: "50m"
+  env:
+    BACKEND_API_URL: "http://frontend-svc.dev.svc.cluster.local:80"
+
+bookService:
+  replicaCount: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "125m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+userService:
+  replicaCount: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "125m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+borrowService:
+  replicaCount: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "125m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+mongodb:
+  replicaCount: 1
+  persistence:
+    size: 2Gi
+    storageClass: "nfs-client"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "125m"
+    limits:
+      memory: "512Mi"
+      cpu: "250m"
+
+gateway:
+  host: "library-dev.local"
+
+haproxy:
+  replicaCount: 1

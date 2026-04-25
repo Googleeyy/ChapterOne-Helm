@@ -1,0 +1,75 @@
+{{- $services := dict "book" (dict "name" "book-service" "config" .Values.bookService) "user" (dict "name" "user-service" "config" .Values.userService) "borrow" (dict "name" "borrow-service" "config" .Values.borrowService) -}}
+{{- range $name, $service := $services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $service.name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "library-e2e.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: backend
+    app: {{ $service.name }}
+spec:
+  replicas: {{ $service.config.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $service.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $service.name }}
+    spec:
+      initContainers:
+        - name: wait-for-mongo
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z mongo.{{ $.Values.global.environment }}.svc.cluster.local 27017; do
+                echo "Waiting for MongoDB..."
+                sleep 2
+              done
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "10m"
+            limits:
+              memory: "32Mi"
+              cpu: "50m"
+      containers:
+        - name: {{ $service.name }}
+          image: "{{ $service.config.image.repository }}:{{ $service.config.image.tag }}"
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ $service.config.service.port }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := $service.config.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- if eq $name "user" }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_SECRET
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: {{ $service.config.probes.readiness.path }}
+              port: {{ $service.config.probes.readiness.port }}
+            initialDelaySeconds: {{ $service.config.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ $service.config.probes.readiness.periodSeconds }}
+          livenessProbe:
+            httpGet:
+              path: {{ $service.config.probes.liveness.path }}
+              port: {{ $service.config.probes.liveness.port }}
+            initialDelaySeconds: {{ $service.config.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ $service.config.probes.liveness.periodSeconds }}
+          resources:
+            {{- toYaml $service.config.resources | nindent 12 }}
+---
+{{- end }}
