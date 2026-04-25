@@ -5,13 +5,12 @@ global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
-
 frontend:
   name: frontend
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: latest
+    tag: dev-ea208dc
     pullPolicy: IfNotPresent
   replicas: 2
   port: 80
