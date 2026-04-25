@@ -15,8 +15,8 @@ bookService:
   routePrefix: /api/books
   healthPath: /api/books
   image:
-    repository: googleyy/book-service
-    tag: dev-3c252f8
+    repository: googleyy/chapterone-book
+    tag: latest
     pullPolicy: IfNotPresent
   replicas: 2
   port: 8081

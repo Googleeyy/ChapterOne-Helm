@@ -46,8 +46,8 @@ bookService:
   routePrefix: /api/books
   healthPath: /api/books
   image:
-    repository: googleyy/book-service
-    tag: dev
+    repository: googleyy/chapterone-book
+    tag: dev-3c252f8
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8081
@@ -111,7 +111,7 @@ frontend:
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: dev-9f38204
+    tag: dev
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80

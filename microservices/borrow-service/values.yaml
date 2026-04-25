@@ -21,7 +21,7 @@ borrowService:
   routePrefix: /api/borrows
   healthPath: /api-docs
   image:
-    repository: googleyy/borrow-service
+    repository: googleyy/chapterone-borrow
     tag: latest
     pullPolicy: IfNotPresent
   replicas: 2
