@@ -136,7 +136,7 @@ haproxy:
       cpu: "100m"
       memory: "128Mi"
 networkPolicy:
-  enabled: false
+  enabled: true
 secrets:
   - name: mongodb-secret
     data:
