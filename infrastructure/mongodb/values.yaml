@@ -1,5 +1,9 @@
-# MongoDB Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
@@ -7,9 +11,9 @@ global:
   imagePullPolicy: IfNotPresent
 
 mongodb:
-  name: mongo
+  name: mongodb
   secretName: mongodb-secret
-  primaryHost: mongo
+  primaryHost: mongodb-0.mongodb
   image:
     repository: mongo
     tag: "7.0"

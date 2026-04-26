@@ -1,12 +1,18 @@
-# Gateway Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
+  imagePullPolicy: IfNotPresent
 
 haproxy:
   enabled: false
+  replicaCount: 1
 
 gateway:
   enabled: true

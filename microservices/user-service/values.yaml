@@ -1,27 +1,34 @@
-# User Service Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
+
 mongodb:
-  name: mongo
-  primaryHost: mongo
+  name: mongodb
+  primaryHost: mongodb-0.mongodb
   port: 27017
+
 borrowService:
   name: borrow-service
   port: 8083
+
 userService:
   name: user-service
   secretName: user-service-secret
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
+    repository: googleyy/chapterone-user
     tag: latest
     pullPolicy: IfNotPresent
-  replicas: 2
+  replicas: 1
   port: 8082
   database:
     name: chapterone_users

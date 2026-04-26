@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: library-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    environment: production
+    project: library-e2e
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
+    targetRevision: production
+    path: helm
+    helm:
+      valueFiles:
+        - values-prod.yaml
+      releaseName: library-prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: library-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10

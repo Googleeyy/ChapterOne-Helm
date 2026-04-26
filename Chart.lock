@@ -1,0 +1,21 @@
+dependencies:
+- name: mongodb
+  repository: file://./infrastructure/mongodb
+  version: 1.0.0
+- name: gateway
+  repository: file://./infrastructure/gateway
+  version: 1.0.0
+- name: book-service
+  repository: file://./microservices/book-service
+  version: 1.0.0
+- name: user-service
+  repository: file://./microservices/user-service
+  version: 1.0.0
+- name: borrow-service
+  repository: file://./microservices/borrow-service
+  version: 1.0.0
+- name: frontend
+  repository: file://./microservices/frontend
+  version: 1.0.0
+digest: sha256:688a414580b45a2376b8a3a31e3b86243b302a9ff1428467f1f729a72dd15826
+generated: "2026-04-25T18:35:33.481718227Z"

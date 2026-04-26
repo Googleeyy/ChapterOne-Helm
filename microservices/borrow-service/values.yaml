@@ -1,30 +1,38 @@
-# Borrow Service Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
+
 mongodb:
-  name: mongo
-  primaryHost: mongo
+  name: mongodb
+  primaryHost: mongodb-0.mongodb
   port: 27017
+
 bookService:
   name: book-service
   port: 8081
+
 userService:
   name: user-service
   port: 8082
+
 borrowService:
   name: borrow-service
   secretName: borrow-service-secret
   routePrefix: /api/borrows
   healthPath: /api-docs
   image:
-    repository: googleyy/borrow-service
+    repository: googleyy/chapterone-borrow
     tag: latest
     pullPolicy: IfNotPresent
-  replicas: 2
+  replicas: 1
   port: 8083
   database:
     name: chapterone_borrows

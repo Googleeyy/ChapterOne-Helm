@@ -1,18 +1,23 @@
-# Frontend Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
+
 frontend:
   name: frontend
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: v0.0.4
+    tag: latest
     pullPolicy: IfNotPresent
-  replicas: 2
+  replicas: 1
   port: 80
   apiBaseUrl: ""
   resources:
@@ -23,8 +28,4 @@ frontend:
       cpu: "100m"
       memory: "128Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 60
-    targetMemoryUtilizationPercentage: 70
+    enabled: false
