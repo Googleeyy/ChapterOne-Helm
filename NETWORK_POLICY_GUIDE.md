@@ -625,16 +625,18 @@ This bypasses ArgoCD entirely and applies the network policy directly to the clu
 kubectl get networkpolicy -n library-dev
 ```
 
-**For Production Environment:**
-```bash
-kubectl get networkpolicy -n chapterone
-```
-
-Expected output:
+**Expected output if deployed:**
 ```
 NAME                    POD-SELECTOR   AGE
 library-network-policy   <none>         1m
 ```
+
+**Expected output if NOT deployed:**
+```
+No resources found in library-dev namespace.
+```
+
+**Note**: Since you just pushed the network policy template but haven't created the root-level ArgoCD application yet, the policy won't be deployed. See "ArgoCD Integration" section for how to deploy it.
 
 ### Check Policy Details
 
@@ -648,6 +650,8 @@ kubectl describe networkpolicy library-network-policy -n library-dev
 kubectl describe networkpolicy library-network-policy -n library-prod
 ```
 
+This shows the detailed rules of the policy.
+
 ### Test Connectivity
 
 **In Development Environment:**
@@ -660,6 +664,45 @@ kubectl exec -it <pod-name> -n library-dev -- curl http://book-service:8081/api/
 ```bash
 # Test from one pod to another
 kubectl exec -it <pod-name> -n library-prod -- curl http://book-service:8081/api/books
+```
+
+If the request succeeds, the network policy is allowing traffic correctly.
+
+### Test Network Policy Enforcement
+
+To verify the network policy is actually blocking unauthorized traffic:
+
+```bash
+# 1. Create a test pod in a different namespace
+kubectl run test-pod --image=nicolaka/netshoot -n default --restart=Never -- sleep 3600
+
+# 2. Try to access services from different namespace (should be blocked)
+kubectl exec -it test-pod -n default -- curl http://book-service.library-dev.svc.cluster.local:8081/api/books
+
+# 3. This should fail/timeout if network policy is working
+# Expected: Connection timeout or refused
+
+# 4. Clean up test pod
+kubectl delete pod test-pod -n default
+```
+
+### Check ArgoCD Application Status
+
+```bash
+# Check if the root chart application exists
+argocd app get library-root-chart
+
+# Or check all applications
+argocd app list
+```
+
+### Verify Policy is Applied to All Pods
+
+```bash
+# Check which pods the policy applies to
+kubectl get pods -n library-dev --show-labels
+
+# The policy uses podSelector: {} which means it applies to ALL pods in the namespace
 ```
 
 ### Troubleshooting
