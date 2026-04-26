@@ -12,15 +12,18 @@ spec:
   - Ingress
   - Egress
   ingress:
+  # Allow traffic from within the same namespace (inter-service communication)
   - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: {{ .Values.global.namespace }}
   egress:
+  # Allow traffic to all pods in the same namespace (inter-service communication)
   - to:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: {{ .Values.global.namespace }}
+  # Allow DNS resolution (kube-system)
   - to:
     - namespaceSelector:
         matchLabels:
@@ -30,6 +33,7 @@ spec:
       port: 53
     - protocol: UDP
       port: 53
+  # Allow MongoDB access (specific port)
   - to:
     - namespaceSelector:
         matchLabels:
