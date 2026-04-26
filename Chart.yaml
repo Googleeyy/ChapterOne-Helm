@@ -14,15 +14,15 @@ dependencies:
     condition: gateway.enabled
     repository: file://./infrastructure/gateway
     version: "1.0.0"
-  - name: book-service
+  - name: bookService
     condition: bookService.enabled
     repository: file://./microservices/book-service
     version: "1.0.0"
-  - name: user-service
+  - name: userService
     condition: userService.enabled
     repository: file://./microservices/user-service
     version: "1.0.0"
-  - name: borrow-service
+  - name: borrowService
     condition: borrowService.enabled
     repository: file://./microservices/borrow-service
     version: "1.0.0"
