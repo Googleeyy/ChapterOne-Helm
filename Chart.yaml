@@ -30,7 +30,3 @@ dependencies:
     condition: frontend.enabled
     repository: file://./microservices/frontend
     version: "1.0.0"
-  - name: kube-prometheus-stack
-    condition: monitoring.enabled
-    repository: https://prometheus-community.github.io/helm-charts
-    version: "55.5.0"
