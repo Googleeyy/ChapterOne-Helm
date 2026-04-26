@@ -69,7 +69,7 @@ userService:
   healthPath: /actuator/health
   image:
     repository: googleyy/user-service
-    tag: dev
+    tag: dev-ae52bf1
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8082
