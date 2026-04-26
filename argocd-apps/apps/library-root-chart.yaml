@@ -20,6 +20,73 @@ spec:
       releaseName: library-root
       valueFiles:
         - values-dev.yaml
+      values: |
+        book-service:
+          name: book-service
+          secretName: book-service-secret
+          routePrefix: /api/books
+          healthPath: /api/books
+          image:
+            repository: googleyy/chapterone-book
+            tag: dev-bb5c906
+            pullPolicy: IfNotPresent
+          replicas: 1
+          port: 8081
+          database:
+            name: chapterone_books_dev
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          autoscaling:
+            enabled: false
+        user-service:
+          name: user-service
+          secretName: user-service-secret
+          routePrefix: /api/users
+          healthPath: /actuator/health
+          image:
+            repository: googleyy/chapterone-user
+            tag: dev-97a1bba
+            pullPolicy: IfNotPresent
+          replicas: 1
+          port: 8082
+          database:
+            name: chapterone_users_dev
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          autoscaling:
+            enabled: false
+        borrow-service:
+          name: borrow-service
+          secretName: borrow-service-secret
+          routePrefix: /api/borrows
+          healthPath: /api-docs
+          image:
+            repository: googleyy/chapterone-borrow
+            tag: dev-97e80d5
+            pullPolicy: IfNotPresent
+          replicas: 1
+          port: 8083
+          database:
+            name: chapterone_borrows_dev
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          autoscaling:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: library-dev
