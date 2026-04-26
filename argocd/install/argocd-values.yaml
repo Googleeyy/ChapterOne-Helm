@@ -1,0 +1,56 @@
+# Minimal ArgoCD values for a single-cluster setup with 1 master + 2 workers
+# Install with:
+#   helm repo add argo https://argoproj.github.io/argo-helm
+#   helm install argocd argo/argo-cd -n argocd --create-namespace -f argocd/install/argocd-values.yaml
+
+server:
+  # Expose ArgoCD UI via NodePort for bare-metal clusters without LoadBalancer
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
+
+  # Disable TLS on the server (terminate at ingress or use plain HTTP internally)
+  extraArgs:
+    - --insecure
+
+  # Resource limits suitable for a small cluster (1 master + 2 workers)
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Enable metrics (optional, for Prometheus)
+  metrics:
+    enabled: false
+
+# Reduce repo-server resources for small clusters
+repoServer:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# Reduce dex-server resources (disable if not using SSO)
+dex:
+  enabled: false
+
+# Reduce application controller resources for small clusters
+controller:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+# ArgoCD Notifications (optional)
+notifications:
+  enabled: false
