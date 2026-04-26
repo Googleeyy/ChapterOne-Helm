@@ -32,12 +32,12 @@ spec:
           readinessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}
-            initialDelaySeconds: 30
+            initialDelaySeconds: 45
             periodSeconds: 15
           resources:
             requests:
