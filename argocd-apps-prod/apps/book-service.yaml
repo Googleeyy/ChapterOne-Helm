@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: book-service
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
+    app.kubernetes.io/component: microservice
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: library-e2e
+  source:
+    repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
+    targetRevision: production
+    path: microservices/book-service
+    helm:
+      releaseName: book-service
+      valueFiles:
+        - ../../values-prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: library-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3
