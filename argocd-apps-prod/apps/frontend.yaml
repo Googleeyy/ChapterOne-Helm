@@ -14,28 +14,15 @@ spec:
   project: library-e2e
   source:
     repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
-    targetRevision: dev
+    targetRevision: production
     path: microservices/frontend
     helm:
       releaseName: frontend
       valueFiles:
-        - ../../values-dev.yaml
-      values: |
-        image:
-          repository: googleyy/chapterone-frontend
-          tag: dev-899cf5d
-          pullPolicy: IfNotPresent
-        replicas: 1
-        resources:
-          requests:
-            cpu: "25m"
-            memory: "32Mi"
-          limits:
-            cpu: "50m"
-            memory: "64Mi"
+        - ../../values-prod.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: library-dev
+    namespace: library-prod
   syncPolicy:
     automated:
       prune: true

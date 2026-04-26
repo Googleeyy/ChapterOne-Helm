@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/part-of: library-e2e
     app.kubernetes.io/component: infrastructure
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -24,14 +24,16 @@ spec:
     server: https://kubernetes.default.svc
     namespace: library-dev
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - PrunePropagationPolicy=foreground
     retry:
-      limit: 2
+      limit: 3
       backoff:
-        duration: 10s
+        duration: 5s
         factor: 2
-        maxDuration: 5m
+        maxDuration: 3m
   revisionHistoryLimit: 3

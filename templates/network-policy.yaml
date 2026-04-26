@@ -12,15 +12,22 @@ spec:
   - Ingress
   - Egress
   ingress:
+  # Allow traffic from within the same namespace (inter-service communication)
   - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: {{ .Values.global.namespace }}
+  # Allow traffic from HAProxy server (external ingress)
+  - from:
+    - ipBlock:
+        cidr: 172.31.27.171/32
   egress:
+  # Allow traffic to all pods in the same namespace (inter-service communication)
   - to:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: {{ .Values.global.namespace }}
+  # Allow DNS resolution (kube-system)
   - to:
     - namespaceSelector:
         matchLabels:
@@ -30,6 +37,12 @@ spec:
       port: 53
     - protocol: UDP
       port: 53
+  # Allow traffic to kgateway-system (for gateway xDS configuration)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
+  # Allow MongoDB access (specific port)
   - to:
     - namespaceSelector:
         matchLabels:

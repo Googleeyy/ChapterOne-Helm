@@ -5,9 +5,9 @@ metadata:
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: library-e2e
-    app.kubernetes.io/component: backend
+    app.kubernetes.io/component: microservice
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -20,6 +20,19 @@ spec:
       releaseName: borrow-service
       valueFiles:
         - ../../values-dev.yaml
+      values: |
+        image:
+          repository: googleyy/chapterone-borrow
+          tag: dev-97e80d5
+          pullPolicy: IfNotPresent
+        replicas: 1
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
   destination:
     server: https://kubernetes.default.svc
     namespace: library-dev
@@ -30,7 +43,6 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - PrunePropagationPolicy=foreground
     retry:
       limit: 3
       backoff:
