@@ -5,13 +5,13 @@ dependencies:
 - name: gateway
   repository: file://./infrastructure/gateway
   version: 1.0.0
-- name: book-service
+- name: bookService
   repository: file://./microservices/book-service
   version: 1.0.0
-- name: user-service
+- name: userService
   repository: file://./microservices/user-service
   version: 1.0.0
-- name: borrow-service
+- name: borrowService
   repository: file://./microservices/borrow-service
   version: 1.0.0
 - name: frontend
