@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
+    app.kubernetes.io/component: frontend
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: library-e2e
+  source:
+    repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
+    targetRevision: dev
+    path: microservices/frontend
+    helm:
+      releaseName: frontend
+      valueFiles:
+        - ../../values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: library-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3

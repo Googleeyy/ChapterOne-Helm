@@ -1,16 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: library-e2e-app-of-apps
+  name: library-root
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: library-e2e
   source:
     repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
     targetRevision: dev
-    path: argocd/applications
+    path: argocd-apps
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -20,4 +24,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: 3

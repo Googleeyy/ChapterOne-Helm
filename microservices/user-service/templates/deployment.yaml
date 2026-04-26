@@ -21,7 +21,10 @@ spec:
             - containerPort: {{ .Values.userService.port }}
           env:
             - name: MONGO_URI
-              value: mongodb://mongo:27017/chapterone_users
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.userService.name }}-config
+                  key: MONGO_URI
             - name: JWT_SECRET
               value: chapterone-super-secret-jwt-key-change-in-production-256bits
             - name: BORROW_SERVICE_URL
@@ -29,12 +32,12 @@ spec:
           readinessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}
-            initialDelaySeconds: 40
+            initialDelaySeconds: 30
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}
-            initialDelaySeconds: 60
+            initialDelaySeconds: 45
             periodSeconds: 15
           resources:
             requests:

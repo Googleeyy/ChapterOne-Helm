@@ -47,7 +47,7 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/chapterone-book
-    tag: dev-c7f991f
+    tag: dev-bb5c906
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8081
@@ -69,7 +69,7 @@ userService:
   healthPath: /actuator/health
   image:
     repository: googleyy/chapterone-user
-    tag: dev-ae52bf1
+    tag: dev-97a1bba
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8082
@@ -91,7 +91,7 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/chapterone-borrow
-    tag: dev-882f658
+    tag: dev-97e80d5
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8083
@@ -111,11 +111,11 @@ frontend:
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: dev-ac269f2
+    tag: dev-899cf5d
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80
-  apiBaseUrl: ""
+  apiBaseUrl: "http://library-dev.local"
   resources:
     requests:
       cpu: "25m"
@@ -136,7 +136,7 @@ haproxy:
       cpu: "100m"
       memory: "128Mi"
 networkPolicy:
-  enabled: false
+  enabled: true
 secrets:
   - name: mongodb-secret
     data:

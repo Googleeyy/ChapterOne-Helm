@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: library-e2e
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
+spec:
+  description: Library E2E Platform
+  sourceRepos:
+    - https://github.com/Googleeyy/ChapterOne-Helm.git
+  destinations:
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+    - namespace: library-dev
+      server: https://kubernetes.default.svc
+    - namespace: library-prod
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+  orphanedResources:
+    warn: false
