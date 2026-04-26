@@ -21,16 +21,19 @@ spec:
             - containerPort: {{ .Values.bookService.port }}
           env:
             - name: MONGO_URI
-              value: mongodb://mongo:27017/chapterone_books
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.bookService.name }}-config
+                  key: MONGO_URI
           readinessProbe:
             tcpSocket:
               port: {{ .Values.bookService.port }}
-            initialDelaySeconds: 60
+            initialDelaySeconds: 15
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: {{ .Values.bookService.port }}
-            initialDelaySeconds: 90
+            initialDelaySeconds: 30
             periodSeconds: 15
           resources:
             requests:

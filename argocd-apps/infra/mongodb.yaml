@@ -1,40 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: library-prod
+  name: mongodb
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
+    app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  labels:
-    environment: production
-    project: library-e2e
 spec:
-  project: default
+  project: library-e2e
   source:
     repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
-    targetRevision: production
-    path: helm
+    targetRevision: dev
+    path: infrastructure/mongodb
     helm:
+      releaseName: mongodb
       valueFiles:
-        - values-prod.yaml
-      releaseName: library-prod
+        - ../../values-dev.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: library-prod
+    namespace: library-dev
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
-      - RespectIgnoreDifferences=true
+      - ServerSideApply=true
     retry:
-      limit: 5
+      limit: 3
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: 3
