@@ -91,7 +91,7 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/chapterone-borrow
-    tag: dev-882f658
+    tag: dev-97e80d5
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8083
