@@ -69,7 +69,7 @@ userService:
   healthPath: /actuator/health
   image:
     repository: googleyy/chapterone-user
-    tag: dev-ae52bf1
+    tag: dev-97a1bba
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8082
