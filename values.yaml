@@ -118,7 +118,7 @@ frontend:
     pullPolicy: IfNotPresent
   replicas: 2
   port: 80
-  apiBaseUrl: ""
+  apiBaseUrl: "http://library.local"
   resources:
     requests:
       cpu: "50m"
