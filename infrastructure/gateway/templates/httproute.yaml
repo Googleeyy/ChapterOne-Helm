@@ -19,6 +19,8 @@ spec:
         - name: book-service
           namespace: {{ .Values.global.namespace }}
           port: 8081
+      timeouts:
+        request: 30s
     - matches:
         - path:
             type: PathPrefix
@@ -27,6 +29,8 @@ spec:
         - name: user-service
           namespace: {{ .Values.global.namespace }}
           port: 8082
+      timeouts:
+        request: 30s
     - matches:
         - path:
             type: PathPrefix
@@ -35,6 +39,8 @@ spec:
         - name: borrow-service
           namespace: {{ .Values.global.namespace }}
           port: 8083
+      timeouts:
+        request: 30s
     - matches:
         - path:
             type: Exact
