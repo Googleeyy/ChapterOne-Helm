@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: library-root-chart
+  name: frontend
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: library-e2e
-    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/component: frontend
   annotations:
-    argocd.argoproj.io/sync-wave: "-3"
+    argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -15,11 +15,24 @@ spec:
   source:
     repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
     targetRevision: dev
-    path: .
+    path: microservices/frontend
     helm:
-      releaseName: library-root
+      releaseName: frontend
       valueFiles:
-        - values-dev.yaml
+        - ../../values-dev.yaml
+      values: |
+        image:
+          repository: googleyy/chapterone-frontend
+          tag: dev-899cf5d
+          pullPolicy: IfNotPresent
+        replicas: 1
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "32Mi"
+          limits:
+            cpu: "50m"
+            memory: "64Mi"
   destination:
     server: https://kubernetes.default.svc
     namespace: library-dev
@@ -30,7 +43,6 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - PrunePropagationPolicy=foreground
     retry:
       limit: 3
       backoff:

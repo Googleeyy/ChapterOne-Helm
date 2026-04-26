@@ -14,16 +14,16 @@ dependencies:
     condition: gateway.enabled
     repository: file://./infrastructure/gateway
     version: "1.0.0"
-  - name: bookService
-    condition: bookService.enabled
+  - name: book-service
+    condition: book-service.enabled
     repository: file://./microservices/book-service
     version: "1.0.0"
-  - name: userService
-    condition: userService.enabled
+  - name: user-service
+    condition: user-service.enabled
     repository: file://./microservices/user-service
     version: "1.0.0"
-  - name: borrowService
-    condition: borrowService.enabled
+  - name: borrow-service
+    condition: borrow-service.enabled
     repository: file://./microservices/borrow-service
     version: "1.0.0"
   - name: frontend
