@@ -26,15 +26,9 @@ spec:
                   name: {{ .Values.userService.name }}-config
                   key: MONGO_URI
             - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.userService.secretName }}
-                  key: JWT_SECRET
+              value: chapterone-super-secret-jwt-key-change-in-production-256bits
             - name: BORROW_SERVICE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.userService.name }}-config
-                  key: BORROW_SERVICE_URL
+              value: http://borrow-service:8083
           readinessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}
