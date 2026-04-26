@@ -21,11 +21,20 @@ spec:
             - containerPort: {{ .Values.userService.port }}
           env:
             - name: MONGO_URI
-              value: mongodb://mongo:27017/chapterone_users
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.userService.name }}-config
+                  key: MONGO_URI
             - name: JWT_SECRET
-              value: chapterone-super-secret-jwt-key-change-in-production-256bits
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.userService.secretName }}
+                  key: JWT_SECRET
             - name: BORROW_SERVICE_URL
-              value: http://borrow-service:8083
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.userService.name }}-config
+                  key: BORROW_SERVICE_URL
           readinessProbe:
             tcpSocket:
               port: {{ .Values.userService.port }}

@@ -21,11 +21,20 @@ spec:
             - containerPort: {{ .Values.borrowService.port }}
           env:
             - name: MONGO_URI
-              value: mongodb://mongo:27017/chapterone_borrows
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.borrowService.name }}-config
+                  key: MONGO_URI
             - name: BOOK_SERVICE_URL
-              value: http://book-service:8081
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.borrowService.name }}-config
+                  key: BOOK_SERVICE_URL
             - name: USER_SERVICE_URL
-              value: http://user-service:8082
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.borrowService.name }}-config
+                  key: USER_SERVICE_URL
           readinessProbe:
             tcpSocket:
               port: {{ .Values.borrowService.port }}
