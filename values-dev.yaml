@@ -47,7 +47,7 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/chapterone-book
-    tag: dev-c7f991f
+    tag: dev-bb5c906
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8081
