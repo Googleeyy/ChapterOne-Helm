@@ -2,27 +2,6 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: frontend-route
-  namespace: {{ .Values.global.namespace }}
-  labels:
-    app: library-e2e
-    component: gateway
-spec:
-  parentRefs:
-    - name: library-e2e-gateway
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: frontend
-          namespace: {{ .Values.global.namespace }}
-          port: 80
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
   name: api-route
   namespace: {{ .Values.global.namespace }}
   labels:
@@ -64,4 +43,31 @@ spec:
         - name: book-service
           namespace: {{ .Values.global.namespace }}
           port: 8081
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: frontend-route
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: library-e2e
+    component: gateway
+spec:
+  parentRefs:
+    - name: library-e2e-gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: X-Forwarded-Path
+                value: /
+      backendRefs:
+        - name: frontend
+          namespace: {{ .Values.global.namespace }}
+          port: 80
 {{- end }}
