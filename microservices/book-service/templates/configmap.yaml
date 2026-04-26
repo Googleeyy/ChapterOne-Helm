@@ -9,4 +9,4 @@ data:
   APP_NAME: "Book Service"
   HOST: "0.0.0.0"
   PORT: "{{ .Values.bookService.port }}"
-  MONGO_URI: "mongodb://{{ .Values.mongodb.primaryHost }}:{{ .Values.mongodb.port }}/{{ .Values.bookService.database.name }}"
+  MONGO_URI: "mongodb://{{ .Values.mongodb.primaryHost }}.{{ .Values.mongodb.name }}-headless.{{ .Values.global.namespace }}.svc.cluster.local:{{ .Values.mongodb.port }}/{{ .Values.bookService.database.name }}"
