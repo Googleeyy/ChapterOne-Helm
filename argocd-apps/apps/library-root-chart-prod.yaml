@@ -14,7 +14,7 @@ spec:
   project: library-e2e
   source:
     repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
-    targetRevision: main
+    targetRevision: production
     path: .
     helm:
       releaseName: library-root-prod
