@@ -91,7 +91,7 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/borrow-service
-    tag: dev
+    tag: dev-882f658
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8083
