@@ -37,6 +37,11 @@ spec:
       port: 53
     - protocol: UDP
       port: 53
+  # Allow traffic to kgateway-system (for gateway xDS configuration)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
   # Allow MongoDB access (specific port)
   - to:
     - namespaceSelector:
