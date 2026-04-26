@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: library-e2e
+    app.kubernetes.io/component: monitoring
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: library-e2e
+  source:
+    repoURL: https://github.com/Googleeyy/ChapterOne-Helm.git
+    targetRevision: main
+    path: .
+    helm:
+      releaseName: monitoring
+      valueFiles:
+        - values-prod.yaml
+      values: |
+        monitoring:
+          enabled: true
+        mongodb:
+          enabled: false
+        gateway:
+          enabled: false
+        bookService:
+          enabled: false
+        userService:
+          enabled: false
+        borrowService:
+          enabled: false
+        frontend:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: library-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3

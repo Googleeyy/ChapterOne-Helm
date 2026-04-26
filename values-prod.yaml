@@ -163,6 +163,123 @@ haproxy:
 networkPolicy:
   enabled: true
 
+monitoring:
+  enabled: true
+  namespace: library-prod
+
+  # Prometheus Configuration
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      retention: 30d
+      resources:
+        requests:
+          cpu: "1000m"
+          memory: "1Gi"
+        limits:
+          cpu: "2000m"
+          memory: "4Gi"
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: "nfs-client"
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: "50Gi"
+      serviceMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelector: {}
+      podMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelector: {}
+
+  # Grafana Configuration
+  grafana:
+    enabled: true
+    image:
+      repository: grafana/grafana
+      tag: "10.3.3"
+      pullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1Gi"
+    persistence:
+      enabled: true
+      storageClassName: "nfs-client"
+      accessModes: ["ReadWriteOnce"]
+      size: "10Gi"
+    adminPassword: "CHANGE-THIS-IN-PRODUCTION"
+    service:
+      type: ClusterIP
+      port: 3000
+    ingress:
+      enabled: true
+      hosts:
+        - grafana.library.local
+      tls:
+        - secretName: library-tls-secret
+          hosts:
+            - grafana.library.local
+    grafana.ini:
+      server:
+        root_url: https://grafana.library.local
+      auth.anonymous:
+        enabled: false
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: 'default'
+            orgId: 1
+            folder: ''
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+    dashboards:
+      default:
+        # Kubernetes Cluster Overview
+        kubernetes-cluster:
+          gnetId: 7249
+          revision: 1
+          datasource: Prometheus
+        # Node Exporter Full
+        node-exporter:
+          gnetId: 1860
+          revision: 29
+          datasource: Prometheus
+        # Pods Overview
+        pods:
+          gnetId: 6417
+          revision: 1
+          datasource: Prometheus
+
+  # Node Exporter for system metrics
+  nodeExporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "64Mi"
+      limits:
+        cpu: "200m"
+        memory: "128Mi"
+
+  # Kubernetes Metrics Server
+  kubeStateMetrics:
+    enabled: true
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+
 secrets:
   - name: mongodb-secret
     data:
