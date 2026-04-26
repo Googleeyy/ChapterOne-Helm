@@ -1,33 +1,7 @@
-# Book Service Subchart Values
-# These values are overridden by the parent chart's values.yaml
+# Parent chart values.yaml / values-dev.yaml / values-prod.yaml are the single source of truth.
+# This stub exists so the subchart can be packaged; all defaults come from the umbrella chart.
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
-mongodb:
-  name: mongo
-  primaryHost: mongo
-  port: 27017
-bookService:
-  name: book-service
-  secretName: book-service-secret
-  routePrefix: /api/books
-  healthPath: /api/books
-  image:
-    repository: googleyy/chapterone-book
-    tag: latest
-    pullPolicy: IfNotPresent
-  replicas: 2
-  port: 8081
-  database:
-    name: chapterone_books
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "256Mi"
-    limits:
-      cpu: "500m"
-      memory: "512Mi"
-  autoscaling:
-    enabled: false
