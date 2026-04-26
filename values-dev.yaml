@@ -68,7 +68,7 @@ userService:
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
+    repository: googleyy/chapterone-user
     tag: dev-ae52bf1
     pullPolicy: IfNotPresent
   replicas: 1
@@ -90,7 +90,7 @@ borrowService:
   routePrefix: /api/borrows
   healthPath: /api-docs
   image:
-    repository: googleyy/borrow-service
+    repository: googleyy/chapterone-borrow
     tag: dev-882f658
     pullPolicy: IfNotPresent
   replicas: 1

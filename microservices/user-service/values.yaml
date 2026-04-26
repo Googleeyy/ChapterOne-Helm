@@ -25,7 +25,7 @@ userService:
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
+    repository: googleyy/chapterone-user
     tag: latest
     pullPolicy: IfNotPresent
   replicas: 1

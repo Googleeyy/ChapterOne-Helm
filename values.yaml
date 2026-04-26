@@ -46,7 +46,7 @@ bookService:
   routePrefix: /api/books
   healthPath: /api/books
   image:
-    repository: googleyy/book-service
+    repository: googleyy/chapterone-book
     tag: latest
     pullPolicy: IfNotPresent
   replicas: 2
@@ -69,7 +69,7 @@ userService:
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
+    repository: googleyy/chapterone-user
     tag: latest
     pullPolicy: IfNotPresent
   replicas: 2
