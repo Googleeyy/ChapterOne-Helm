@@ -25,29 +25,19 @@ jobs:
           version: v3.14.0
 
       - name: Update Helm Dependencies
-        run: |
-          cd helm
-          helm dependency update
+        run: helm dependency update
 
       - name: Lint Helm Chart (Dev)
-        run: |
-          cd helm
-          helm lint . -f values-dev.yaml
+        run: helm lint . -f values-dev.yaml
 
       - name: Lint Helm Chart (Prod)
-        run: |
-          cd helm
-          helm lint . -f values-prod.yaml
+        run: helm lint . -f values-prod.yaml
 
       - name: Template Helm Chart (Dev)
-        run: |
-          cd helm
-          helm template library-dev . -f values-dev.yaml --namespace library-dev > /dev/null
+        run: helm template library-dev . -f values-dev.yaml --namespace library-dev > /dev/null
 
       - name: Template Helm Chart (Prod)
-        run: |
-          cd helm
-          helm template library-prod . -f values-prod.yaml --namespace library-prod > /dev/null
+        run: helm template library-prod . -f values-prod.yaml --namespace library-prod > /dev/null
 
       - name: Validate ArgoCD Application Manifests
         run: |
