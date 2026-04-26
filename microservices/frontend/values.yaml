@@ -1,7 +1,31 @@
-# Parent chart values.yaml / values-dev.yaml / values-prod.yaml are the single source of truth.
-# This stub exists so the subchart can be packaged; all defaults come from the umbrella chart.
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
+
+frontend:
+  name: frontend
+  routePrefix: /
+  image:
+    repository: googleyy/chapterone-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  port: 80
+  apiBaseUrl: ""
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+  autoscaling:
+    enabled: false

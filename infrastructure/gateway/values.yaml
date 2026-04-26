@@ -1,7 +1,47 @@
-# Parent chart values.yaml / values-dev.yaml / values-prod.yaml are the single source of truth.
-# This stub exists so the subchart can be packaged; all defaults come from the umbrella chart.
+# ──────────────────────────────────────────────────────────────
+# FALLBACK DEFAULTS — DO NOT EDIT HERE.
+# The umbrella chart (values.yaml / values-dev.yaml / values-prod.yaml)
+# is the single source of truth and overrides everything below.
+# These values exist only so Helm templates render successfully.
+# ──────────────────────────────────────────────────────────────
 
 global:
   appName: library-e2e
   namespace: chapterone
   imagePullPolicy: IfNotPresent
+
+haproxy:
+  enabled: false
+  replicaCount: 1
+
+gateway:
+  enabled: true
+  name: library-gateway
+  gatewayClassName: kgateway
+  listener:
+    name: http
+    port: 80
+  host: "library.local"
+  tls:
+    enabled: false
+    secretName: ""
+
+frontend:
+  name: frontend
+  routePrefix: /
+  port: 80
+
+bookService:
+  name: book-service
+  routePrefix: /api/books
+  port: 8081
+
+userService:
+  name: user-service
+  routePrefix: /api/users
+  port: 8082
+
+borrowService:
+  name: borrow-service
+  routePrefix: /api/borrows
+  port: 8083
