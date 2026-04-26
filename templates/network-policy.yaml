@@ -17,6 +17,10 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: {{ .Values.global.namespace }}
+  # Allow traffic from HAProxy server (external ingress)
+  - from:
+    - ipBlock:
+        cidr: 172.31.27.171/32
   egress:
   # Allow traffic to all pods in the same namespace (inter-service communication)
   - to:
