@@ -8,9 +8,7 @@ global:
   imagePullSecrets: []
   imagePullPolicy: IfNotPresent
   environment: prod
-
 createNamespace: true
-
 gateway:
   name: library-gateway
   namespace: library-prod
@@ -23,7 +21,6 @@ gateway:
   tls:
     enabled: true
     secretName: "library-tls-secret"
-
 mongodb:
   name: mongodb
   secretName: mongodb-secret
@@ -43,7 +40,6 @@ mongodb:
     limits:
       cpu: "1000m"
       memory: "2Gi"
-
 bookService:
   name: book-service
   secretName: book-service-secret
@@ -70,7 +66,6 @@ bookService:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80
-
 userService:
   name: user-service
   secretName: user-service-secret
@@ -97,7 +92,6 @@ userService:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80
-
 borrowService:
   name: borrow-service
   secretName: borrow-service-secret
@@ -124,13 +118,12 @@ borrowService:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80
-
 frontend:
   name: frontend
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: "1.0.0"
+    tag: "v0.0.5"
     pullPolicy: IfNotPresent
   replicas: 3
   port: 80
@@ -148,7 +141,6 @@ frontend:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 60
     targetMemoryUtilizationPercentage: 70
-
 haproxy:
   enabled: true
   replicaCount: 2
@@ -159,21 +151,19 @@ haproxy:
     limits:
       cpu: "200m"
       memory: "256Mi"
-
 networkPolicy:
   enabled: true
-
 secrets:
   - name: mongodb-secret
     data:
-      # No authentication - using simple URI
+    # No authentication - using simple URI
   - name: book-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+    # No MongoDB credentials needed - using simple URI
   - name: user-service-secret
     data:
       # No MongoDB credentials needed - using simple URI
       JWT_SECRET: "CHANGE-THIS-TO-A-SECURE-PRODUCTION-SECRET"
   - name: borrow-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+# No MongoDB credentials needed - using simple URI
