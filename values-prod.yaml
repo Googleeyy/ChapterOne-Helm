@@ -49,7 +49,7 @@ bookService:
     repository: googleyy/chapterone-book
     tag: "v0.0.1"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8081
   database:
     name: chapterone_books
@@ -75,7 +75,7 @@ userService:
     repository: googleyy/chapterone-user
     tag: "v1.0.0"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8082
   database:
     name: chapterone_users
@@ -101,7 +101,7 @@ borrowService:
     repository: googleyy/chapterone-borrow
     tag: "v1.0.0"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8083
   database:
     name: chapterone_borrows
@@ -125,7 +125,7 @@ frontend:
     repository: googleyy/chapterone-frontend
     tag: "v0.0.5"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 80
   apiBaseUrl: "http://library.local"
   resources:
