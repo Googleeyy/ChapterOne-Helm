@@ -12,6 +12,8 @@ spec:
   destinations:
     - namespace: argocd
       server: https://kubernetes.default.svc
+    - namespace: library-dev
+      server: https://kubernetes.default.svc
     - namespace: library-prod
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
