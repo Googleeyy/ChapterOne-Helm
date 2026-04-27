@@ -17,7 +17,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: library-dev
   syncPolicy:
     automated:
       prune: true
