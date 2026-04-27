@@ -142,7 +142,7 @@ frontend:
     targetCPUUtilizationPercentage: 60
     targetMemoryUtilizationPercentage: 70
 haproxy:
-  enabled: true
+  enabled: false
   replicaCount: 2
   resources:
     requests:
