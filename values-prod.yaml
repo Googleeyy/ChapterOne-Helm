@@ -72,8 +72,8 @@ userService:
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
-    tag: "1.0.0"
+    repository: googleyy/chapterone-user
+    tag: "v1.0.0"
     pullPolicy: IfNotPresent
   replicas: 3
   port: 8082
@@ -99,7 +99,7 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/chapterone-borrow
-    tag: "1.0.0"
+    tag: "v1.0.0"
     pullPolicy: IfNotPresent
   replicas: 3
   port: 8083
