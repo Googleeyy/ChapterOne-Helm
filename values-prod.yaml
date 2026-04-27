@@ -123,7 +123,7 @@ frontend:
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: "v0.0.5"
+    tag: "v0.0.6"
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80
