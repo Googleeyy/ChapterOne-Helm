@@ -47,7 +47,7 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/chapterone-book
-    tag: dev-bb5c906
+    tag: dev-399298d
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8081
@@ -137,7 +137,6 @@ haproxy:
       memory: "128Mi"
 networkPolicy:
   enabled: false
-
 secrets:
   - name: mongodb-secret
     data:
