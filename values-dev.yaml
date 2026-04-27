@@ -36,10 +36,10 @@ mongodb:
   resources:
     requests:
       cpu: "100m"
-      memory: "256Mi"
+      memory: "128Mi"
     limits:
       cpu: "250m"
-      memory: "512Mi"
+      memory: "256Mi"
 bookService:
   name: book-service
   secretName: book-service-secret
