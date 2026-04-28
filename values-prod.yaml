@@ -61,11 +61,7 @@ bookService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
+    enabled: false
 userService:
   name: user-service
   secretName: user-service-secret
@@ -87,11 +83,7 @@ userService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
+    enabled: false
 borrowService:
   name: borrow-service
   secretName: borrow-service-secret
@@ -113,11 +105,7 @@ borrowService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
+    enabled: false
 frontend:
   name: frontend
   routePrefix: /
