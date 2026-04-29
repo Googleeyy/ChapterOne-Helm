@@ -1,0 +1,174 @@
+#!/bin/bash
+# Pre-push hook for comprehensive validation before pushing to remote
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "Running pre-push validation..."
+
+# Get the current branch
+CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "unknown")
+
+echo "Current branch: $CURRENT_BRANCH"
+
+# Check if we're pushing to protected branches
+PROTECTED_BRANCHES=("main" "master" "dev" "production")
+REMOTE_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo "")
+
+for branch in "${PROTECTED_BRANCHES[@]}"; do
+    if [[ "$CURRENT_BRANCH" == "$branch" ]] || [[ "$REMOTE_BRANCH" == *"/$branch" ]]; then
+        echo -e "${YELLOW}Warning: Pushing to protected branch '$branch'${NC}"
+        echo "Ensure you have proper authorization and have tested changes."
+        
+        # Ask for confirmation (skip in CI/CD)
+        if [ -z "$CI" ]; then
+            read -p "Continue with push? (y/n) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "${RED}Push aborted${NC}"
+                exit 1
+            fi
+        fi
+    fi
+done
+
+# Comprehensive Helm validation
+echo -e "${YELLOW}Running comprehensive Helm validation...${NC}"
+
+if command -v helm &> /dev/null; then
+    # Update dependencies
+    echo "Updating Helm dependencies..."
+    helm dependency update
+    
+    # Lint for dev environment
+    echo "Linting Helm chart (dev)..."
+    if helm lint . -f values-dev.yaml; then
+        echo -e "${GREEN}✓ Helm lint passed (dev)${NC}"
+    else
+        echo -e "${RED}Helm lint failed (dev)${NC}"
+        exit 1
+    fi
+    
+    # Lint for prod environment
+    echo "Linting Helm chart (prod)..."
+    if helm lint . -f values-prod.yaml; then
+        echo -e "${GREEN}✓ Helm lint passed (prod)${NC}"
+    else
+        echo -e "${RED}Helm lint failed (prod)${NC}"
+        exit 1
+    fi
+    
+    # Template validation for dev
+    echo "Validating Helm templates (dev)..."
+    if helm template library-dev . -f values-dev.yaml --namespace library-dev > /dev/null; then
+        echo -e "${GREEN}✓ Helm template validation passed (dev)${NC}"
+    else
+        echo -e "${RED}Helm template validation failed (dev)${NC}"
+        exit 1
+    fi
+    
+    # Template validation for prod
+    echo "Validating Helm templates (prod)..."
+    if helm template library-prod . -f values-prod.yaml --namespace library-prod > /dev/null; then
+        echo -e "${GREEN}✓ Helm template validation passed (prod)${NC}"
+    else
+        echo -e "${RED}Helm template validation failed (prod)${NC}"
+        exit 1
+    fi
+else
+    echo -e "${YELLOW}Helm not found. Skipping Helm validation.${NC}"
+fi
+
+# Validate ArgoCD manifests
+echo -e "${YELLOW}Validating ArgoCD manifests...${NC}"
+
+if command -v python3 &> /dev/null; then
+    for file in argocd-apps/apps/*.yaml argocd-apps/infra/*.yaml argocd-apps/projects/*.yaml; do
+        if [ -f "$file" ]; then
+            echo "Validating $file..."
+            if ! python3 -c "import yaml; yaml.safe_load(open('$file'))" 2>/dev/null; then
+                echo -e "${RED}YAML validation failed for $file${NC}"
+                exit 1
+            fi
+            echo -e "${GREEN}✓ $file${NC}"
+        fi
+    done
+    
+    # Validate production ArgoCD manifests
+    for file in argocd-apps-prod/apps/*.yaml argocd-apps-prod/infra/*.yaml argocd-apps-prod/projects/*.yaml; do
+        if [ -f "$file" ]; then
+            echo "Validating $file..."
+            if ! python3 -c "import yaml; yaml.safe_load(open('$file'))" 2>/dev/null; then
+                echo -e "${RED}YAML validation failed for $file${NC}"
+                exit 1
+            fi
+            echo -e "${GREEN}✓ $file${NC}"
+        fi
+    done
+else
+    echo -e "${YELLOW}Python3 not found. Skipping ArgoCD manifest validation.${NC}"
+fi
+
+# Check for sensitive files that shouldn't be pushed
+echo -e "${YELLOW}Checking for sensitive files...${NC}"
+
+SENSITIVE_PATTERNS=(
+    "*.pem"
+    "*.key"
+    "*.p12"
+    "*.pfx"
+    "*.jks"
+    "*secret*.txt"
+    "*password*.txt"
+    "*.env.local"
+    "*.env.production"
+)
+
+for pattern in "${SENSITIVE_PATTERNS[@]}"; do
+    if git ls-files | grep -E "$pattern" > /dev/null 2>&1; then
+        echo -e "${RED}Sensitive file detected matching pattern: $pattern${NC}"
+        echo "Please remove sensitive files before pushing."
+        exit 1
+    fi
+done
+
+echo -e "${GREEN}✓ No sensitive files detected${NC}"
+
+# Check if secrets need to be rotated (for production)
+if [[ "$CURRENT_BRANCH" == *"prod"* ]] || [[ "$REMOTE_BRANCH" == *"prod"* ]]; then
+    echo -e "${YELLOW}Production branch detected - checking secret rotation...${NC}"
+    
+    # Check for placeholder secrets
+    if grep -r "change-me-in-production" values-prod.yaml secrets/ > /dev/null 2>&1; then
+        echo -e "${RED}Placeholder secrets detected in production configuration${NC}"
+        echo "Please rotate secrets before deploying to production."
+        exit 1
+    fi
+    
+    if grep -r "CHANGE-THIS-TO-A-SECURE-PRODUCTION-SECRET" values-prod.yaml secrets/ > /dev/null 2>&1; then
+        echo -e "${RED}Placeholder secrets detected in production configuration${NC}"
+        echo "Please rotate secrets before deploying to production."
+        exit 1
+    fi
+    
+    echo -e "${GREEN}✓ No placeholder secrets found${NC}"
+fi
+
+# Run tests if available
+if [ -f "scripts/test.sh" ]; then
+    echo -e "${YELLOW}Running tests...${NC}"
+    if bash scripts/test.sh; then
+        echo -e "${GREEN}✓ Tests passed${NC}"
+    else
+        echo -e "${RED}Tests failed${NC}"
+        exit 1
+    fi
+fi
+
+echo -e "${GREEN}Pre-push validation passed successfully!${NC}"
+exit 0

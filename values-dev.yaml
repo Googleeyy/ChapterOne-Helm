@@ -36,10 +36,10 @@ mongodb:
   resources:
     requests:
       cpu: "100m"
-      memory: "256Mi"
+      memory: "128Mi"
     limits:
       cpu: "250m"
-      memory: "512Mi"
+      memory: "256Mi"
 bookService:
   name: book-service
   secretName: book-service-secret
@@ -47,7 +47,7 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/chapterone-book
-    tag: dev-bb5c906
+    tag: dev-399298d
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8081
@@ -69,7 +69,7 @@ userService:
   healthPath: /actuator/health
   image:
     repository: googleyy/chapterone-user
-    tag: dev-97a1bba
+    tag: dev-b5c402e
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8082
@@ -91,7 +91,7 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/chapterone-borrow
-    tag: dev-97e80d5
+    tag: dev-50ca732
     pullPolicy: IfNotPresent
   replicas: 1
   port: 8083
@@ -111,7 +111,7 @@ frontend:
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: dev-899cf5d
+    tag: dev-3a01e83
     pullPolicy: IfNotPresent
   replicas: 1
   port: 80
@@ -136,7 +136,7 @@ haproxy:
       cpu: "100m"
       memory: "128Mi"
 networkPolicy:
-  enabled: true
+  enabled: false
 secrets:
   - name: mongodb-secret
     data:

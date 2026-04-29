@@ -1,2 +1,2 @@
-# README files
-README*.md
+# Ignore all Markdown files
+*.md
