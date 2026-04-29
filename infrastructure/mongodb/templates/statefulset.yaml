@@ -14,6 +14,10 @@ spec:
       labels:
         app: {{ .Values.mongodb.name }}
     spec:
+      volumes:
+        - name: mongo-init
+          configMap:
+            name: {{ .Values.mongodb.name }}-init-script
       containers:
         - name: mongodb
           image: mongo:7.0
@@ -22,16 +26,22 @@ spec:
           volumeMounts:
             - name: mongo-storage
               mountPath: /data/db
+            - name: mongo-init
+              mountPath: /docker-entrypoint-initdb.d
           readinessProbe:
             exec:
               command: ["mongosh", "--eval", "db.adminCommand('ping')"]
-            initialDelaySeconds: 20
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
             periodSeconds: 10
+            failureThreshold: 6
           livenessProbe:
             exec:
               command: ["mongosh", "--eval", "db.adminCommand('ping')"]
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
             periodSeconds: 15
+            failureThreshold: 6
   volumeClaimTemplates:
     - metadata:
         name: mongo-storage
