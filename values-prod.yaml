@@ -8,9 +8,7 @@ global:
   imagePullSecrets: []
   imagePullPolicy: IfNotPresent
   environment: prod
-
 createNamespace: true
-
 gateway:
   name: library-gateway
   namespace: library-prod
@@ -23,7 +21,6 @@ gateway:
   tls:
     enabled: true
     secretName: "library-tls-secret"
-
 mongodb:
   name: mongodb
   secretName: mongodb-secret
@@ -43,7 +40,6 @@ mongodb:
     limits:
       cpu: "1000m"
       memory: "2Gi"
-
 bookService:
   name: book-service
   secretName: book-service-secret
@@ -51,9 +47,9 @@ bookService:
   healthPath: /api/books
   image:
     repository: googleyy/chapterone-book
-    tag: "1.0.0"
+    tag: "v0.0.1"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8081
   database:
     name: chapterone_books
@@ -65,22 +61,17 @@ bookService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
-
+    enabled: false
 userService:
   name: user-service
   secretName: user-service-secret
   routePrefix: /api/users
   healthPath: /actuator/health
   image:
-    repository: googleyy/user-service
-    tag: "1.0.0"
+    repository: googleyy/chapterone-user
+    tag: "v0.1.2"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8082
   database:
     name: chapterone_users
@@ -92,12 +83,7 @@ userService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
-
+    enabled: false
 borrowService:
   name: borrow-service
   secretName: borrow-service-secret
@@ -105,9 +91,9 @@ borrowService:
   healthPath: /api-docs
   image:
     repository: googleyy/chapterone-borrow
-    tag: "1.0.0"
+    tag: "v0.0.3"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 8083
   database:
     name: chapterone_borrows
@@ -119,20 +105,15 @@ borrowService:
       cpu: "500m"
       memory: "512Mi"
   autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-    targetMemoryUtilizationPercentage: 80
-
+    enabled: false
 frontend:
   name: frontend
   routePrefix: /
   image:
     repository: googleyy/chapterone-frontend
-    tag: "1.0.0"
+    tag: "v0.0.6"
     pullPolicy: IfNotPresent
-  replicas: 3
+  replicas: 1
   port: 80
   apiBaseUrl: "http://library.local"
   resources:
@@ -148,9 +129,8 @@ frontend:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 60
     targetMemoryUtilizationPercentage: 70
-
 haproxy:
-  enabled: true
+  enabled: false
   replicaCount: 2
   resources:
     requests:
@@ -159,21 +139,20 @@ haproxy:
     limits:
       cpu: "200m"
       memory: "256Mi"
-
 networkPolicy:
   enabled: false
 
 secrets:
   - name: mongodb-secret
     data:
-      # No authentication - using simple URI
+    # No authentication - using simple URI
   - name: book-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+    # No MongoDB credentials needed - using simple URI
   - name: user-service-secret
     data:
       # No MongoDB credentials needed - using simple URI
       JWT_SECRET: "CHANGE-THIS-TO-A-SECURE-PRODUCTION-SECRET"
   - name: borrow-service-secret
     data:
-      # No MongoDB credentials needed - using simple URI
+# No MongoDB credentials needed - using simple URI

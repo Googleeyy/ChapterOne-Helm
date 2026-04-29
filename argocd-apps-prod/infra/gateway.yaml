@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gateway
+  name: gateway-prod
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: library-e2e
@@ -30,6 +30,11 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+    ignoreDifferences:
+      - group: gateway.networking.k8s.io
+        kind: HTTPRoute
+        jsonPointers:
+          - /status
     retry:
       limit: 3
       backoff:
