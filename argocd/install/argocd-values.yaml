@@ -1,7 +1,3 @@
-# Minimal ArgoCD values for a single-cluster setup with 1 master + 2 workers
-# Install with:
-#   helm repo add argo https://argoproj.github.io/argo-helm
-#   helm install argocd argo/argo-cd -n argocd --create-namespace -f argocd/install/argocd-values.yaml
 
 server:
   # Expose ArgoCD UI via NodePort for bare-metal clusters without LoadBalancer
